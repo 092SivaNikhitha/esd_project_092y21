@@ -1,0 +1,25 @@
+#include <LiquidCrystal.h>
+LiquidCrystallcd(12, 11, 5, 4, 3, 2);
+int led = 6;
+charinByte;
+void setup()
+{
+pinMode(led, OUTPUT);
+lcd.begin(16, 2);
+Serial.begin(9600);
+lcd.setCursor(16,1);
+lcd.autoscroll();
+}
+void loop()
+{
+if(Serial.available())
+  {
+
+inByte = Serial.read();         
+lcd.write(inByte); 
+digitalWrite(led, HIGH);      
+delay(200);
+  }
+else
+digitalWrite(led, LOW);  
+}
