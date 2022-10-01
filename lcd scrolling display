@@ -1,0 +1,65 @@
+#include<reg51.h>
+#include<string.h>
+#define LCD P2
+sbit rs =P3^0;
+sbit rw=P3^1;
+sbit e =P3^2; 
+void LcdCommand(const char cCommand);
+void DisplayMessage(const char *pszMessage);
+void LcdInit(void);
+void Delay(unsigned int);
+int main()
+{
+    short siLoop = 0;
+    short siLen = 0;
+    const char *pszDisplayMsg = "Welcome to aticleworld.";
+    siLen = strlen(pszDisplayMsg);
+    LcdInit();
+    while(1)
+    {
+        LcdCommand(0x8f); 
+        DisplayMessage(pszDisplayMsg);
+        for(siLoop=0; siLoop < siLen; siLoop++)
+        {
+            LcdCommand(0x1c);
+            Delay(25);
+        }
+    }
+}
+void LcdCommand(const char cCommand)
+{
+    rs = 0;
+    rw = 0;
+    e  = 1;
+    LCD = cCommand;
+    Delay(1);
+    e=0;
+}
+void DisplayMessage(const char *pszMessage)
+{
+    rs = 1;
+    rw = 0;
+    while(*pszMessage!='\0')
+    {
+        e  = 1;
+        LCD = *pszMessage;
+        Delay(1);
+        e=0;
+        pszMessage++;
+    }
+
+void Delay(unsigned int i)
+{
+    int j,k;
+    for(j=0; j<i; j++)
+    {
+        for(k=0; k<1275; k++);
+    }
+}
+void LcdInit(void)
+{
+    LcdCommand(0x01);
+    LcdCommand(0x38);
+    LcdCommand(0x06);
+    LcdCommand(0x0c);
+}
